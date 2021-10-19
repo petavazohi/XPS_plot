@@ -12,6 +12,7 @@ Attribute plot_xps.VB_ProcData.VB_Invoke_Func = "P\n14"
     Dim Emax As Long
     Dim Cmin As Long
     Dim Cmax As Long
+    Dim temp As Range
     Dim BE As Range
     Dim Counts As Range
     Dim name As String
@@ -25,8 +26,8 @@ Attribute plot_xps.VB_ProcData.VB_Invoke_Func = "P\n14"
     Dim axy As Axis
     
     ' size of the chart
-    width = 500
-    height = 300
+    width = 700
+    height = 500
     
     ' name of the sheet to be used later for the chart as well
     name = ActiveSheet.name
@@ -65,8 +66,18 @@ Attribute plot_xps.VB_ProcData.VB_Invoke_Func = "P\n14"
     ActiveChart.Axes(xlCategory).MaximumScale = Emax
     
     ' Setting y limits to 95% minimum of CPS and 120% maximum CPS
-    ActiveChart.Axes(xlValue).MinimumScale = Application.WorksheetFunction.RoundDown(Cmin * 0.95, 0)
-    ActiveChart.Axes(xlValue).MaximumScale = Application.WorksheetFunction.RoundUp(Cmax * 1.2, 0)
+    Set temp = Range("B2")
+    If Not (IsEmpty(temp.Value)) Then
+       ActiveChart.Axes(xlValue).MinimumScale = temp.Value
+    Else
+       ActiveChart.Axes(xlValue).MinimumScale = Application.WorksheetFunction.RoundDown(Cmin * 0.95, 0)
+    End If
+    Set temp = Range("C2")
+    If Not (IsEmpty(temp.Value)) Then
+       ActiveChart.Axes(xlValue).MaximumScale = temp.Value
+    Else
+       ActiveChart.Axes(xlValue).MaximumScale = Application.WorksheetFunction.RoundUp(Cmax * 1.2, 0)
+    End If
     
     ' Changing the title name to the sheet name
     ActiveChart.ChartTitle.Text = name
@@ -108,10 +119,9 @@ Attribute plot_xps.VB_ProcData.VB_Invoke_Func = "P\n14"
     
     ' Legend Settings
     ActiveChart.Legend.Select
-    Selection.Position = xlCorner
-    'ActiveChart.Legend.Left = 0.04 * width 'width / 10
-    'ActiveChart.Legend.Top = 0 'height / 10
-    'ActiveChart.Legend.Select
+    Selection.Position = xlLegendPositionCorner
+    ActiveChart.Legend.Left = 0
+    ActiveChart.Legend.Top = 0
     ActiveChart.Legend.Select
     Selection.Format.TextFrame2.TextRange.Font.Size = 10.5
     With Selection.Format.Line
@@ -124,10 +134,10 @@ Attribute plot_xps.VB_ProcData.VB_Invoke_Func = "P\n14"
     End With
     
     ' Changing the plot area to be almost the same as the plot size
-    ActiveChart.PlotArea.Left = 0.04 * width '32.655
+    ActiveChart.PlotArea.Left = 0 '32.655
     ActiveChart.PlotArea.Top = 0 '4.982
     ActiveChart.PlotArea.height = height * 0.94 '401.105
-    ActiveChart.PlotArea.width = width  '710.344
+    ActiveChart.PlotArea.width = 0.96 * width '710.344
     
     ' Chaning the color of x and y axis
     ActiveChart.Axes(xlCategory).Select
@@ -215,7 +225,9 @@ Attribute plot_xps.VB_ProcData.VB_Invoke_Func = "P\n14"
     Set axx = ActiveChart.Axes(xlCategory)
     axx.TickLabels.Font.Size = 12
     
-    
+    ActiveSheet.ChartObjects(name).Activate
+    'ActiveChart.Axes(xlCategory).Select
+    ActiveChart.Axes(xlCategory).ReversePlotOrder = True
     'Selection.Format.TextFrame2.TextRange.Font.Size = 12
     'ActiveChart.Axes(xlValue).Select
     'Selection.Format.TextFrame2.TextRange.Font.Size = 12
