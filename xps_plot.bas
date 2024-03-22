@@ -1,4 +1,4 @@
-Attribute VB_Name = "Module1"
+Attribute VB_Name = "Module11"
 Sub plot_xps()
 Attribute plot_xps.VB_ProcData.VB_Invoke_Func = "P\n14"
 '
@@ -59,7 +59,8 @@ Attribute plot_xps.VB_ProcData.VB_Invoke_Func = "P\n14"
     ' Ploting style 240
     ActiveSheet.Range("B4", lCol & lRow).Select
     ActiveSheet.Shapes.AddChart2(240, xlXYScatterSmoothNoMarkers).Select
-    ActiveChart.SetSourceData Source:=Range(name & "!$B$4:$" & lCol & "$" & lRow)
+    ' ActiveChart.SetSourceData Source:=Range(name & "!$B$4:$" & lCol & "$" & lRow)
+    
     
     ' Setting x limits
     ActiveChart.Axes(xlCategory).MinimumScale = Emin
